@@ -27,7 +27,4 @@ replay_pid*
 
 #datos
 etls/data/Crime_Data_from_2020_to_Present_20240914.csv
-etls/input/Crime_Data_from_2020_to_Present_20240914.csv
-etls/data/Crime_Data_from_2020_to_Present_20240914.csv
 *.zip
-
