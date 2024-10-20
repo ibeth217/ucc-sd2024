@@ -1,0 +1,1 @@
+sudo docker run -d -p 80:80 ibethpacheco/ejercicio-docker02:1.0.0

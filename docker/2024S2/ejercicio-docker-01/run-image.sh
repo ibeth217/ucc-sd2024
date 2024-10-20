@@ -1,0 +1,1 @@
+sudo docker run --rm ibethpacheco/ejercicio-docker01

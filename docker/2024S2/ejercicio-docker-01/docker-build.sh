@@ -1,0 +1,1 @@
+docker build -t ibethpacheco/ejercicio-docker01:1.0.0 .
