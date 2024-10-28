@@ -1,0 +1,1 @@
+docker build -t ibethpacheco/app-cliente-python:latest .

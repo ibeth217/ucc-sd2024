@@ -1,0 +1,1 @@
+docker run --rm ibethpacheco/app-cliente-java
