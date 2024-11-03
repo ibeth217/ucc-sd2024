@@ -1,0 +1,9 @@
+version: '3'
+services:
+  nginx:
+    container_name: web-app    # Aquí agregamos el nombre personalizado
+    image: nginx:latest
+    ports:
+      - "8084:80"
+    volumes:
+      - ./html:/usr/share/nginx/html

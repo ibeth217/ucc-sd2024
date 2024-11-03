@@ -28,9 +28,9 @@
 			"save-password": true,
 			"configuration": {
 				"host": "localhost",
-				"port": "5433",
+				"port": "5432",
 				"database": "postgres",
-				"url": "jdbc:postgresql://localhost:5433/postgres",
+				"url": "jdbc:postgresql://localhost:5432/postgres",
 				"configurationType": "MANUAL",
 				"home": "postgresql-x64-16",
 				"type": "dev",
