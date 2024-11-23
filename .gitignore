@@ -42,3 +42,4 @@ etls/input/Crime_Data_from_2020_to_Present_20240914.csv
 
 # Excepción: No ignorar un archivo CSV específico
 !etls/data/Crime_Data_from_2020_to_Present_20240914.csv
+etls/data/Crime_Data_from_2020_to_Present_20240914.csv
