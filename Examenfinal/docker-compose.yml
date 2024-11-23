@@ -1,0 +1,95 @@
+
+x-postgres-common:
+  &postgres-common
+  image: postgres:14-alpine
+  user: postgres
+  restart: always
+  healthcheck:
+    test: 'pg_isready -U user --dbname=postgres'
+    interval: 10s
+    timeout: 5s
+    retries: 5
+
+services:
+  
+  postgres_primary:
+    <<: *postgres-common
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256\nhost replication all 0.0.0.0/0 md5"
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    command: |
+      postgres 
+      -c wal_level=replica 
+      -c hot_standby=on 
+      -c max_wal_senders=10 
+      -c max_replication_slots=10 
+      -c hot_standby_feedback=on
+    volumes:
+      - ./00_init.sql:/docker-entrypoint-initdb.d/00_init_replication.sql
+    networks:
+      - mynetwork
+
+  postgres_replica:
+    <<: *postgres-common
+    ports:
+      - 5433:5432
+    environment:
+      PGUSER: replicator
+      PGPASSWORD: replicator_password
+    command: |
+      bash -c "
+      until pg_basebackup --pgdata=/var/lib/postgresql/data -R --slot=replication_slot --host=postgres_primary --port=5432
+      do
+      echo 'Waiting for primary to connect...'
+      sleep 1s
+      done
+      echo 'Backup done, starting replica...'
+      chmod 0700 /var/lib/postgresql/data
+      postgres
+      "
+    depends_on:
+      - postgres_primary
+    networks:
+      - mynetwork
+  app1:
+    build:
+      context: ./tablax  # Ajustamos el context a la carpeta tablax
+      dockerfile: Dockerfile  # Usamos el Dockerfile que ya existe
+    container_name: tablax-app
+    ports:
+      - 8081:8081
+    depends_on:
+      - postgres_primary
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_primary:5432/postgres
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    restart: always
+    networks:
+      - mynetwork
+  app2:
+    build:
+      context: ./tablay  # Ajustamos el context a la carpeta tablax
+      dockerfile: Dockerfile  # Usamos el mismo Dockerfile
+    container_name: tablay-app
+    ports:
+      - 8082:8082
+    depends_on:
+      - postgres_primary
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_primary:5432/postgres
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    restart: always
+    networks:
+      - mynetwork
+    
+# Definición de la red
+networks:
+  mynetwork:
+    driver: bridge

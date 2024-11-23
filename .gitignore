@@ -1,8 +1,14 @@
 # Compiled class file
 *.class
 
+# Excepción: No ignorar clases en la carpeta específica "include"
+!include/*.class
+
 # Log file
 *.log
+
+# Excepción: No ignorar archivos de log en la carpeta específica "logs"
+!logs/*.log
 
 # BlueJ files
 *.ctxt
@@ -19,14 +25,20 @@
 *.tar.gz
 *.rar
 
+# Excepción: No ignorar JAR específicos en la carpeta "libs"
+!libs/special-library.jar
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
 
+# IDE-specific files
 .vscode/
 
-#datos
+# Datos
 etls/data/Crime_Data_from_2020_to_Present_20240914.csv
 etls/input/Crime_Data_from_2020_to_Present_20240914.csv
 *.zip
 
+# Excepción: No ignorar un archivo CSV específico
+!etls/data/Crime_Data_from_2020_to_Present_20240914.csv
